@@ -1,4 +1,4 @@
-package io.github.monthalcantara.CatalogoVideo.domain;
+package io.github.monthalcantara.CatalogoVideo.domain.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,8 +10,8 @@ import java.util.UUID;
 public final class Category {
 
     private UUID id;
-    private final String name;
-    private final String description;
+    private String name;
+    private String description;
     private Boolean isActive = true;
 
     /* Programação defensiva...Uma vez que a regra de negócio exige 'name' para a categoria...
@@ -28,13 +28,21 @@ public final class Category {
     public Category(String name, String description, boolean isActive) {
         this(name, description);
         this.isActive = isActive;
-
     }
 
     public void active() {
         this.isActive = true;
     }
+
     public void desactivate() {
         this.isActive = false;
     }
+
+    public void update(String name, String description, boolean isActive) {
+        this.name = name;
+        this.description = description;
+        this.isActive = isActive;
+
+    }
+
 }
