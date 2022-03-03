@@ -1,0 +1,17 @@
+version: '3.7'
+
+#Declarando os servios que o docker compose subirá
+services:
+#  A esse serviço dei o nome de app
+  app:
+#    construa o container usando o dockerfile que esta aqui (.)
+    build: .
+#      mapeando a minha porta 8080 para refletir a porta 8080 do container
+    ports:
+      - "8080:8080"
+#      Aqui estou mapeando tudo a partir da raíz para a pasta /app dentro do container
+    volumes:
+      - ./:/app
+    working_dir: /app
+#      Comando de inicialização do docker compose
+    command: ./gradlew bootRun
