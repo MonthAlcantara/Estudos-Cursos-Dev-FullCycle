@@ -1,0 +1,32 @@
+version: '3.1'
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: mysql-db
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: customer_db
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    networks:
+      - clientes-compose-network
+    links:
+      - db
+    ports:
+      - 8000:80
+    depends_on:
+      - db
+volumes:
+  dbdata:
+networks:
+  clientes-compose-network:
+    driver: bridge
