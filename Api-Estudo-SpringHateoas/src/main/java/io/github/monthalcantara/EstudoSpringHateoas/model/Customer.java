@@ -10,14 +10,10 @@ import org.springframework.hateoas.*;
 import javax.persistence.*;
 import java.util.Objects;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Entity
 @Table(name = "customers")
-/*Com essa extensão do RepresentationModel da lib do hateoas o objeto passa a ter o método add
-* onde poderei adicionar o link para o mesmo
-*/
-public class Customer extends RepresentationModel<Customer> {
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

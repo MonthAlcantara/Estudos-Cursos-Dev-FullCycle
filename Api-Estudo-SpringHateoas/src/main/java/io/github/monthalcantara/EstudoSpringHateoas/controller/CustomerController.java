@@ -1,5 +1,6 @@
 package io.github.monthalcantara.EstudoSpringHateoas.controller;
 
+import io.github.monthalcantara.EstudoSpringHateoas.dto.CustomerResponse;
 import io.github.monthalcantara.EstudoSpringHateoas.model.Customer;
 import io.github.monthalcantara.EstudoSpringHateoas.repository.CustomerRepository;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -28,14 +29,20 @@ public class CustomerController {
 
         final var customerSalvo = customerRepository.save(customer);
 
-        return new ResponseEntity<Customer>(geraLink(customerSalvo), HttpStatus.CREATED);
+        return new ResponseEntity<CustomerResponse>(geraLink(customerSalvo), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> buscaCustomerPeloId(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomerResponse> buscaCustomerPeloId(@PathVariable("id") Long id) {
 
-        final var link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CustomerController.class).buscaTodosCustomer()).withSelfRel();
-        final var customer = buscaCustomerPeloIdSeExistir(id);
+        final var link = WebMvcLinkBuilder
+            //linkTo vai inspecionar a classe passada como parametro
+                .linkTo(
+            //methodOn vai inspecionar o metodo que informo da classe passada como parametro, nesse caso buscaTodosCustomer()
+                        WebMvcLinkBuilder.methodOn(CustomerController.class).buscaTodosCustomer()
+
+                ).withSelfRel();
+        final var customer = new CustomerResponse(buscaCustomerPeloIdSeExistir(id));
 
         customer.add(link);
 
@@ -43,7 +50,7 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Customer>> buscaTodosCustomer() {
+    public ResponseEntity<List<CustomerResponse>> buscaTodosCustomer() {
 
         final var customers = customerRepository.findAll()
                 .stream()
@@ -74,10 +81,12 @@ public class CustomerController {
         return customer.get();
     }
 
-    private Customer geraLink(Customer customer) {
+    private CustomerResponse geraLink(Customer customer) {
+        CustomerResponse customerResponse = new CustomerResponse(customer);
         //linkTo vai inspecionar a classe passada como parametro
         final var link = WebMvcLinkBuilder.linkTo(CustomerController.class).slash(customer.getId()).withSelfRel();
-        return customer.add(link);
+        customerResponse.add(link);
+        return customerResponse;
 
     }
 
